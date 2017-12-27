@@ -19,6 +19,10 @@ export default class Login extends React.Component {
   }
 
   componentWillMount() {
+    
+  }
+
+  componentDidMount() {
     let config = {
       apiKey: "AIzaSyB1MEyaaj20fPJUx7kv-5UnlLk08yHGwF0",
       authDomain: "react-course-dc3f4.firebaseapp.com",
@@ -27,24 +31,23 @@ export default class Login extends React.Component {
     };
     if (!firebase.apps.length) {
       firebase.initializeApp(config);
+      firebase.auth().onAuthStateChanged(this.handleLogin);
+    }
+
+  }
+
+  handleLogin = (user) => {
+    if (user != null) {
+      console.log("We are authenticated now!");
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({ routeName: 'Home'})
+        ]
+      });
+      this.props.navigation.dispatch(resetAction);
     }
     
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user != null) {
-        console.log("We are authenticated now!");
-
-        const resetAction = NavigationActions.reset({
-          index: 0,
-          actions: [
-            NavigationActions.navigate({ routeName: 'Home', params: {} })
-          ]
-        });
-        this.props.navigation.dispatch(resetAction);
-      }
-    
-      // Do other things
-    });
   }
 
   render() {
